@@ -1,11 +1,12 @@
 package designer
 
 import (
+	"context"
 	"github.com/khorevaa/go-v8platform/errors"
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/marshaler"
 	"net"
 	"strconv"
+	"time"
 )
 
 ///AgentMode
@@ -52,7 +53,7 @@ type AgentModeOptions struct {
 }
 
 func (d AgentModeOptions) Command() string {
-	return types.COMMAND_DESIGNER
+	return COMMAND_DESIGNER
 }
 
 func (d AgentModeOptions) Check() error {
@@ -66,7 +67,7 @@ func (d AgentModeOptions) Check() error {
 	return nil
 }
 
-func (d AgentModeOptions) Values() *types.Values {
+func (d AgentModeOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -90,5 +91,42 @@ func (o AgentModeOptions) WithListenAddress(ipPort string) AgentModeOptions {
 	newO.ListenAddress = host
 	newO.Port = int(port)
 	return newO
+
+}
+
+func waitAgent(ctx context.Context, hostPort string) error {
+
+	ready := make(chan error)
+
+	go func() {
+		timeuot, _ := context.WithTimeout(ctx, time.Second*10)
+		ticker := time.Tick(time.Second)
+		for {
+			select {
+			case <-ready:
+				return
+			case <-ticker:
+
+				_, err := net.Dial("tcp", hostPort)
+				if err == nil {
+					close(ready)
+					return
+				}
+
+			case <-timeuot.Done():
+				ready <- timeuot.Err()
+			}
+		}
+
+	}()
+	err := <-ready
+
+	return err
+
+}
+
+func (o AgentModeOptions) Wait(ctx context.Context) error {
+
+	return waitAgent(ctx, net.JoinHostPort(o.ListenAddress, strconv.FormatInt(int64(o.Port), 64)))
 
 }

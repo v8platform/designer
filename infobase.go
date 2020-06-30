@@ -1,8 +1,7 @@
 package designer
 
 import (
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/marshaler"
 )
 
 // /DumpIB <имя файла>
@@ -13,7 +12,7 @@ type DumpIBOptions struct {
 	File string `v8:"/DumpIB" json:"file"`
 }
 
-func (d DumpIBOptions) Values() *types.Values {
+func (d DumpIBOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -28,7 +27,7 @@ type RestoreIBOptions struct {
 	File string `v8:"/RestoreIB" json:"file"`
 }
 
-func (d RestoreIBOptions) Values() *types.Values {
+func (d RestoreIBOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v

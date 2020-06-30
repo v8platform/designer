@@ -1,9 +1,8 @@
 package repository
 
 import (
-	"github.com/khorevaa/go-v8platform/designer"
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/designer"
+	"github.com/v8platform/marshaler"
 )
 
 ///ConfigurationRepositoryBindCfg [-Extension <имя расширения>] [-forceBindAlreadyBindedUser][-forceReplaceCfg]
@@ -39,7 +38,7 @@ type RepositoryBindCfgOptions struct {
 	ForceReplaceCfg bool `v8:"-ForceReplaceCfg, optional" json:"force_replace"`
 }
 
-func (ib RepositoryBindCfgOptions) Values() *types.Values {
+func (ib RepositoryBindCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
@@ -79,7 +78,7 @@ type RepositoryUnbindCfgOptions struct {
 	Force bool `v8:"-force, optional" json:"force"`
 }
 
-func (ib RepositoryUnbindCfgOptions) Values() *types.Values {
+func (ib RepositoryUnbindCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
@@ -113,7 +112,7 @@ type RepositoryDumpCfgOptions struct {
 	Version int64 `v8:"-v, optional" json:"version"`
 }
 
-func (ib RepositoryDumpCfgOptions) Values() *types.Values {
+func (ib RepositoryDumpCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
@@ -184,7 +183,7 @@ type RepositoryUpdateCfgOptions struct {
 	UpdateDBCfg *designer.UpdateDBCfgOptions `v8:",inherit" json:"update_db_cfg"`
 }
 
-func (ib RepositoryUpdateCfgOptions) Values() *types.Values {
+func (ib RepositoryUpdateCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v

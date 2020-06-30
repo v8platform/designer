@@ -1,12 +1,11 @@
 package repository
 
 import (
-	"github.com/khorevaa/go-v8platform/designer"
 	"github.com/khorevaa/go-v8platform/errors"
-	"github.com/khorevaa/go-v8platform/infobase"
-	"github.com/khorevaa/go-v8platform/runner"
-	"github.com/khorevaa/go-v8platform/tests"
 	"github.com/stretchr/testify/suite"
+	"github.com/v8platform/designer"
+	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/runner"
 	"io/ioutil"
 	"path"
 	"testing"
@@ -22,14 +21,13 @@ func TestRepository(t *testing.T) {
 
 func (t *RepositoryTestSuite) TestCreateRepository() {
 
-	confFile := path.Join(t.Pwd, "..", "tests", "fixtures", "0.9", "1Cv8.cf")
+	confFile := path.Join(t.Pwd, "..", "..", "tests", "fixtures", "0.9", "1Cv8.cf")
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), designer.LoadCfgOptions{
-		Designer: designer.NewDesigner(),
-		File:     confFile},
+	err := runner.Run(tests.NewFileIB(t.TempIB), designer.LoadCfgOptions{
+		File: confFile},
 		runner.WithTimeout(30))
 
-	t.R().NoError(err, errors.GetErrorContext(err))
+	t.R().NoError(err, "err load cf: %s", errors.GetErrorContext(err))
 
 	repPath, _ := ioutil.TempDir("", "1c_rep_")
 
@@ -40,9 +38,9 @@ func (t *RepositoryTestSuite) TestCreateRepository() {
 		ChangesNotRecommendedRule: REPOSITORY_SUPPORT_NOT_SUPPORTED,
 	}.WithPath(repPath)
 
-	err = t.Runner.Run(infobase.NewFileIB(t.TempIB), createOptions,
+	err = runner.Run(tests.NewFileIB(t.TempIB), createOptions,
 		runner.WithTimeout(30))
 
-	t.R().NoError(err, errors.GetErrorContext(err))
+	t.R().NoError(err, "err create repository: %s", errors.GetErrorContext(err))
 
 }

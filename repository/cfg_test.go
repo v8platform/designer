@@ -1,12 +1,11 @@
 package repository
 
 import (
-	"github.com/khorevaa/go-v8platform/designer"
 	"github.com/khorevaa/go-v8platform/errors"
-	"github.com/khorevaa/go-v8platform/infobase"
-	"github.com/khorevaa/go-v8platform/runner"
-	"github.com/khorevaa/go-v8platform/tests"
 	"github.com/stretchr/testify/suite"
+	"github.com/v8platform/designer"
+	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/runner"
 	"io/ioutil"
 	"os"
 	"path"
@@ -33,9 +32,9 @@ func (t *RepositoryCfgTestSuite) BeforeTest(suite, testName string) {
 }
 
 func (t *RepositoryCfgTestSuite) createTestRepository() {
-	confFile := path.Join(t.Pwd, "..", "tests", "fixtures", "0.9", "1Cv8.cf")
+	confFile := path.Join(t.Pwd, "..", "..", "tests", "fixtures", "0.9", "1Cv8.cf")
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), designer.LoadCfgOptions{
+	err := runner.Run(tests.NewFileIB(t.TempIB), designer.LoadCfgOptions{
 		Designer: designer.NewDesigner(),
 		File:     confFile},
 		runner.WithTimeout(30))
@@ -56,7 +55,7 @@ func (t *RepositoryCfgTestSuite) createTestRepository() {
 		ChangesNotRecommendedRule: REPOSITORY_SUPPORT_NOT_SUPPORTED,
 	}.WithRepository(t.Repository)
 
-	err = t.Runner.Run(infobase.NewFileIB(t.TempIB), createOptions,
+	err = runner.Run(tests.NewFileIB(t.TempIB), createOptions,
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))
@@ -69,7 +68,7 @@ func (t *RepositoryCfgTestSuite) TestRepositoryBindCfg() {
 		ForceReplaceCfg:            true,
 	}.WithRepository(t.Repository)
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), command,
+	err := runner.Run(tests.NewFileIB(t.TempIB), command,
 		runner.WithTimeout(30),
 		runner.WithUC("code"))
 
@@ -84,7 +83,7 @@ func (t *RepositoryCfgTestSuite) TestRepositoryUnbindCfg() {
 		ForceReplaceCfg:            true,
 	}.WithRepository(t.Repository)
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), command,
+	err := runner.Run(tests.NewFileIB(t.TempIB), command,
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))
@@ -93,7 +92,7 @@ func (t *RepositoryCfgTestSuite) TestRepositoryUnbindCfg() {
 		Force: true,
 	}.WithRepository(t.Repository)
 
-	err = t.Runner.Run(infobase.NewFileIB(t.TempIB), command2,
+	err = runner.Run(tests.NewFileIB(t.TempIB), command2,
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))
@@ -105,13 +104,12 @@ func (t *RepositoryCfgTestSuite) TestRepositoryDumpCfg() {
 	cfFile, _ := ioutil.TempFile("", "v8_DumpResult_*.cf")
 
 	command := RepositoryDumpCfgOptions{
-		Designer: designer.NewDesigner(),
-		File:     cfFile.Name(),
+		File: cfFile.Name(),
 	}.WithRepository(t.Repository)
 
 	cfFile.Close()
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), command,
+	err := runner.Run(tests.NewFileIB(t.TempIB), command,
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))
@@ -125,13 +123,12 @@ func (t *RepositoryCfgTestSuite) TestRepositoryDumpCfg() {
 func (t *RepositoryCfgTestSuite) TestRepositoryUpdateCfg() {
 
 	command := RepositoryUpdateCfgOptions{
-		Designer: designer.NewDesigner(),
-		Force:    true,
-		Version:  -1,
-		Revised:  true,
+		Force:   true,
+		Version: -1,
+		Revised: true,
 	}.WithRepository(t.Repository)
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), command,
+	err := runner.Run(tests.NewFileIB(t.TempIB), command,
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))

@@ -3,8 +3,7 @@ package designer
 import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/khorevaa/go-v8platform/errors"
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/marshaler"
 )
 
 ///IBRestoreIntegrity
@@ -22,7 +21,7 @@ type IBRestoreIntegrityOptions struct {
 	command struct{} `v8:"/IBRestoreIntegrity" json:"-"`
 }
 
-func (d IBRestoreIntegrityOptions) Values() *types.Values {
+func (d IBRestoreIntegrityOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -39,7 +38,7 @@ type RollbackCfgOptions struct {
 	Extension string `v8:"-Extension, optional" json:"extension"`
 }
 
-func (d RollbackCfgOptions) Values() *types.Values {
+func (d RollbackCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -70,7 +69,7 @@ type ManageCfgSupportOptions struct {
 	Force bool `v8:"-force, optional" json:"force"`
 }
 
-func (o ManageCfgSupportOptions) Values() *types.Values {
+func (o ManageCfgSupportOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
 	return v
@@ -101,7 +100,7 @@ type ReduceEventLogSizeOptions struct {
 	KeepSplitting bool `v8:"-KeepSplitting, optional" json:"keep_splitting"`
 }
 
-func (o ReduceEventLogSizeOptions) Values() *types.Values {
+func (o ReduceEventLogSizeOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
 	return v

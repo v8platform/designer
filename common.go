@@ -1,11 +1,10 @@
 package designer
 
 import (
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/marshaler"
 )
 
-var _ types.Command = (*Designer)(nil)
+var _ command = (*Designer)(nil)
 
 type Designer struct {
 	DisableStartupDialogs  bool `v8:"/DisableStartupDialogs" json:"disable_startup_dialogs"`
@@ -14,7 +13,7 @@ type Designer struct {
 }
 
 func (d Designer) Command() string {
-	return types.COMMAND_DESIGNER
+	return COMMAND_DESIGNER
 }
 
 func (d Designer) Check() error {
@@ -22,7 +21,7 @@ func (d Designer) Check() error {
 	return nil
 }
 
-func (d Designer) Values() *types.Values {
+func (d Designer) Values() []string {
 	v, _ := marshaler.Marshal(d)
 	return v
 
@@ -68,7 +67,7 @@ type UpdateCfgOptions struct {
 	UpdateDBCfg *UpdateDBCfgOptions `v8:",inherit" json:"update_db"`
 }
 
-func (d UpdateCfgOptions) Values() *types.Values {
+func (d UpdateCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -156,7 +155,7 @@ type UpdateDBCfgOptions struct {
 	Extension string `v8:"-Extension, optional" json:"extension"`
 }
 
-func (d UpdateDBCfgOptions) Values() *types.Values {
+func (d UpdateDBCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v

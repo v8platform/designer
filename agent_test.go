@@ -2,16 +2,14 @@ package designer
 
 import (
 	"context"
-	"github.com/khorevaa/go-v8platform/agent/client"
-	"github.com/khorevaa/go-v8platform/infobase"
-	"github.com/khorevaa/go-v8platform/runner"
-	"github.com/khorevaa/go-v8platform/tests"
+	sshclient "github.com/khorevaa/go-v8platform/agent/client"
+	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/runner"
+
 	"github.com/stretchr/testify/suite"
 	"log"
-	"net"
 	"os"
 	"testing"
-	"time"
 )
 
 type AgentTestSuite struct {
@@ -37,7 +35,7 @@ func (a *AgentTestSuite) TestStartAgent() {
 	//		return nil
 	//	}()
 	//
-	process, err := runner.Background(ctx, infobase.NewFileIB(a.TempIB), AgentModeOptions{
+	process, err := runner.Background(ctx, tests.NewFileIB(a.TempIB), AgentModeOptions{
 		Visible:        true,
 		SSHHostKeyAuto: true,
 		BaseDir:        "./"},
@@ -49,30 +47,8 @@ func (a *AgentTestSuite) TestStartAgent() {
 	}
 
 	<-process.Ready()
-	ready := make(chan error)
 
-	go func() {
-		timeuot, _ := context.WithTimeout(ctx, time.Second*2)
-		ticker := time.Tick(time.Second)
-		for {
-			select {
-			case <-ready:
-				return
-			case <-ticker:
-
-				_, err := net.Dial("tcp", ":1543")
-				if err == nil {
-					close(ready)
-					return
-				}
-
-			case <-timeuot.Done():
-				ready <- timeuot.Err()
-			}
-		}
-
-	}()
-	err = <-ready
+	err = waitAgent(ctx, "localhost:1543")
 	if err != nil {
 		log.Fatal(err)
 	}

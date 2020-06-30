@@ -1,9 +1,8 @@
 package repository
 
 import (
-	"github.com/khorevaa/go-v8platform/designer"
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/designer"
+	"github.com/v8platform/marshaler"
 )
 
 ///ConfigurationRepositoryAddUser [-Extension <имя расширения>] -User <Имя> -Pwd <Пароль> -Rights <Права> [-RestoreDeletedUser]
@@ -42,7 +41,7 @@ type RepositoryAddUserOptions struct {
 	RestoreDeletedUser bool `v8:"-RestoreDeletedUser, optional" json:"restore_deleted_user"`
 }
 
-func (ib RepositoryAddUserOptions) Values() *types.Values {
+func (ib RepositoryAddUserOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
@@ -105,7 +104,7 @@ type RepositoryCopyUsersOptions struct {
 	RestoreDeletedUser bool `v8:"-RestoreDeletedUser, optional" json:"restore_deleted_user"`
 }
 
-func (ib RepositoryCopyUsersOptions) Values() *types.Values {
+func (ib RepositoryCopyUsersOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v

@@ -1,9 +1,8 @@
 package repository
 
 import (
-	"github.com/khorevaa/go-v8platform/designer"
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/designer"
+	"github.com/v8platform/marshaler"
 )
 
 ///ConfigurationRepositoryClearGlobalCache [-Extension <имя расширения>]
@@ -22,7 +21,7 @@ type RepositoryClearGlobalCacheOptions struct {
 	Extension string `v8:"-Extension, optional" json:"extension"`
 }
 
-func (ib RepositoryClearGlobalCacheOptions) Values() *types.Values {
+func (ib RepositoryClearGlobalCacheOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
@@ -72,7 +71,7 @@ type RepositoryClearCacheOptions struct {
 	Extension string `v8:"-Extension, optional" json:"extension"`
 }
 
-func (ib RepositoryClearCacheOptions) Values() *types.Values {
+func (ib RepositoryClearCacheOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
@@ -122,7 +121,7 @@ type RepositoryClearLocalCacheOptions struct {
 	Extension string `v8:"-Extension, optional" json:"extension"`
 }
 
-func (ib RepositoryClearLocalCacheOptions) Values() *types.Values {
+func (ib RepositoryClearLocalCacheOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v

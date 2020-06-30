@@ -1,8 +1,7 @@
 package designer
 
 import (
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/marshaler"
 )
 
 type DumpCfgOptions struct {
@@ -11,7 +10,7 @@ type DumpCfgOptions struct {
 	Extension string `v8:"-Extension, optional" json:"extension"`
 }
 
-func (d DumpCfgOptions) Values() *types.Values {
+func (d DumpCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -63,7 +62,7 @@ type DumpConfigToFilesOptions struct {
 	ConfigDumpInfoForChanges string `v8:"-configDumpInfoForChanges, optional" json:"config_dump_info_for_changes"`
 }
 
-func (o DumpConfigToFilesOptions) Values() *types.Values {
+func (o DumpConfigToFilesOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
 	return v
@@ -133,7 +132,7 @@ type GetChangesForConfigDumpOptions struct {
 	GetChanges string `v8:"-getChanges, optional" json:"get_changes"`
 }
 
-func (o GetChangesForConfigDumpOptions) Values() *types.Values {
+func (o GetChangesForConfigDumpOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
 	return v
@@ -170,7 +169,7 @@ type DumpExternalDataFileToFilesOptions struct {
 	File string `v8:",arg" json:"file"`
 }
 
-func (o DumpExternalDataFileToFilesOptions) Values() *types.Values {
+func (o DumpExternalDataFileToFilesOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
 	return v

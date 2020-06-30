@@ -1,9 +1,8 @@
 package repository
 
 import (
-	"github.com/khorevaa/go-v8platform/designer"
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/designer"
+	"github.com/v8platform/marshaler"
 )
 
 type GroupByType string
@@ -56,7 +55,7 @@ type RepositoryReportOptions struct {
 	GroupBy GroupByType `v8:", optional" json:"group_by"`
 }
 
-func (ib RepositoryReportOptions) Values() *types.Values {
+func (ib RepositoryReportOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v

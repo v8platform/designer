@@ -2,31 +2,30 @@ package designer
 
 import (
 	"github.com/khorevaa/go-v8platform/errors"
-	"github.com/khorevaa/go-v8platform/infobase"
-	"github.com/khorevaa/go-v8platform/runner"
-	"github.com/khorevaa/go-v8platform/tests"
+	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/runner"
 	"io/ioutil"
 	"path"
 )
 
 func (t *designerTestSuite) TestDumpIB() {
 	confFile := path.Join(t.Pwd, "..", "tests", "fixtures", "0.9", "1Cv8.cf")
-	ib := infobase.NewFileIB(t.TempIB)
+	ib := tests.NewFileIB(t.TempIB)
 
-	err := t.Runner.Run(ib, LoadCfgOptions{
-		Designer: NewDesigner(),
-		File:     confFile},
+	err := runner.Run(ib, LoadCfgOptions{
+		File: confFile},
 		runner.WithTimeout(30))
 
-	t.R().NoError(err, errors.GetErrorContext(err))
+	t.R().NoError(err, "error load cf: %s", errors.GetErrorContext(err)["message"])
 
 	dtFile, _ := ioutil.TempFile("", "temp_dt")
+	dtFile.Close()
 
-	err = t.Runner.Run(ib, DumpIBOptions{
+	err = runner.Run(ib, DumpIBOptions{
 		File: dtFile.Name()},
 		runner.WithTimeout(30))
 
-	t.R().NoError(err, errors.GetErrorContext(err))
+	t.R().NoError(err, "error dump ib %s", errors.GetErrorContext(err)["message"])
 
 	fileCreated, err2 := tests.Exists(dtFile.Name())
 	t.R().NoError(err2)
@@ -36,18 +35,18 @@ func (t *designerTestSuite) TestDumpIB() {
 
 func (t *designerTestSuite) TestRestoreIB() {
 	dtFile, _ := ioutil.TempFile("", "temp_dt")
-	ib := infobase.NewFileIB(t.TempIB)
+	dtFile.Close()
+	ib := tests.NewFileIB(t.TempIB)
 
-	err := t.Runner.Run(ib, DumpIBOptions{
-		Designer: NewDesigner(),
-		File:     dtFile.Name()},
+	err := runner.Run(ib, DumpIBOptions{
+		File: dtFile.Name()},
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))
 
-	newIB := infobase.NewFileIB(t.TempIB)
+	newIB := tests.NewFileIB(t.TempIB)
 
-	err = t.Runner.Run(newIB, RestoreIBOptions{
+	err = runner.Run(newIB, RestoreIBOptions{
 		File: dtFile.Name()},
 		runner.WithTimeout(30))
 

@@ -1,9 +1,11 @@
 package designer
 
 import (
-	"github.com/khorevaa/go-v8platform/runner"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/runner"
+	"io/ioutil"
 	"os"
 	"path"
 	"testing"
@@ -34,6 +36,18 @@ func (t *createInfoBaseTestSuite) TearDownTest() {
 }
 func (t *createInfoBaseTestSuite) SetupSuite() {
 
+}
+
+func NewTempIB() tests.TempInfobase {
+
+	path, _ := ioutil.TempDir("", "1c_DB_")
+
+	ib := tests.TempInfobase{
+		//InfoBase: InfoBase{},
+		File: path,
+	}
+
+	return ib
 }
 
 func (t *createInfoBaseTestSuite) TestCreateTempInfoBase() {

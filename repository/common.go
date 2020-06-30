@@ -2,10 +2,9 @@ package repository
 
 import (
 	"github.com/hashicorp/go-multierror"
-	"github.com/khorevaa/go-v8platform/designer"
 	"github.com/khorevaa/go-v8platform/errors"
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/designer"
+	"github.com/v8platform/marshaler"
 )
 
 type RepositoryRightType string
@@ -46,7 +45,7 @@ type Repository struct {
 	Password string `v8:"/ConfigurationRepositoryP, optional" json:"password"`
 }
 
-func (ib Repository) Values() *types.Values {
+func (ib Repository) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
@@ -123,7 +122,7 @@ func (o RepositoryCreateOptions) WithRepository(repository Repository) Repositor
 
 }
 
-func (ib RepositoryCreateOptions) Values() *types.Values {
+func (ib RepositoryCreateOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v

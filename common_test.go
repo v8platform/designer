@@ -2,10 +2,9 @@ package designer
 
 import (
 	"github.com/khorevaa/go-v8platform/errors"
-	"github.com/khorevaa/go-v8platform/infobase"
-	"github.com/khorevaa/go-v8platform/runner"
-	"github.com/khorevaa/go-v8platform/tests"
 	"github.com/stretchr/testify/suite"
+	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/runner"
 	"path"
 	"testing"
 )
@@ -21,7 +20,7 @@ func TestDesigner(t *testing.T) {
 func (t *designerTestSuite) TestLoadCfg() {
 	confFile := path.Join(t.Pwd, "..", "tests", "fixtures", "0.9", "1Cv8.cf")
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), LoadCfgOptions{
+	err := runner.Run(tests.NewFileIB(t.TempIB), LoadCfgOptions{
 		Designer: NewDesigner(),
 		File:     confFile},
 		runner.WithTimeout(30))
@@ -41,7 +40,7 @@ func (t *designerTestSuite) TestLoadCfgWithUpdateCfgDB() {
 		},
 	}
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), loadCfg,
+	err := runner.Run(tests.NewFileIB(t.TempIB), loadCfg,
 		runner.WithTimeout(30),
 	)
 
@@ -57,7 +56,7 @@ func (t *designerTestSuite) TestUpdateCfg() {
 		File:     confFile,
 	}.WithUpdateDBCfg(UpdateDBCfgOptions{})
 
-	err := t.Runner.Run(infobase.NewFileIB(t.TempIB), loadCfg,
+	err := runner.Run(tests.NewFileIB(t.TempIB), loadCfg,
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))
@@ -68,7 +67,7 @@ func (t *designerTestSuite) TestUpdateCfg() {
 		File:     confFile2,
 	}
 
-	err = t.Runner.Run(infobase.NewFileIB(t.TempIB), task,
+	err = runner.Run(tests.NewFileIB(t.TempIB), task,
 		runner.WithTimeout(30))
 
 	t.R().NoError(err, errors.GetErrorContext(err))

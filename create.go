@@ -1,8 +1,7 @@
 package designer
 
 import (
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/marshaler"
 	"strconv"
 )
 
@@ -24,7 +23,7 @@ const (
 	DBMS_OracleDatabase = "OracleDatabase"
 )
 
-var _ types.Command = (*CreateInfoBaseOptions)(nil)
+var _ command = (*CreateInfoBaseOptions)(nil)
 
 type CreateInfoBaseOptions struct {
 	DisableStartupDialogs bool   `v8:"/DisableStartupDialogs" json:"disable_startup_dialogs"`
@@ -120,7 +119,7 @@ type CreateServerInfoBaseOptions struct {
 }
 
 func (d CreateInfoBaseOptions) Command() string {
-	return types.COMMAND_CREATEINFOBASE
+	return COMMAND_CREATEINFOBASE
 }
 
 func (d CreateInfoBaseOptions) Check() error {
@@ -128,7 +127,7 @@ func (d CreateInfoBaseOptions) Check() error {
 	return nil
 }
 
-func (d CreateInfoBaseOptions) Values() *types.Values {
+func (d CreateInfoBaseOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -187,7 +186,7 @@ func (fileIB CreateFileInfoBaseOptions) CreateString() (string, error) {
 	return connString, nil
 }
 
-func (d CreateFileInfoBaseOptions) Values() *types.Values {
+func (d CreateFileInfoBaseOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v

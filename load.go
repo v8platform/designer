@@ -1,8 +1,7 @@
 package designer
 
 import (
-	"github.com/khorevaa/go-v8platform/marshaler"
-	"github.com/khorevaa/go-v8platform/types"
+	"github.com/v8platform/marshaler"
 	"strings"
 )
 
@@ -15,7 +14,7 @@ type LoadCfgOptions struct {
 	UpdateDBCfg *UpdateDBCfgOptions `v8:",inherit" json:"update_db_cfg"`
 }
 
-func (d LoadCfgOptions) Values() *types.Values {
+func (d LoadCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v
@@ -97,7 +96,7 @@ type LoadConfigFromFiles struct {
 	UpdateDBCfg *UpdateDBCfgOptions `v8:",inherit" json:"update_db_cfg"`
 }
 
-func (o LoadConfigFromFiles) Values() *types.Values {
+func (o LoadConfigFromFiles) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
 	return v
@@ -176,7 +175,7 @@ type LoadExternalDataFileFromFilesOptions struct {
 	File string `v8:",arg" json:"file"`
 }
 
-func (o LoadExternalDataFileFromFilesOptions) Values() *types.Values {
+func (o LoadExternalDataFileFromFilesOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
 	return v
