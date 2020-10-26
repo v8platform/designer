@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"github.com/khorevaa/go-v8platform/errors"
 	"github.com/stretchr/testify/suite"
 	"github.com/v8platform/designer"
 	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/errors"
 	"github.com/v8platform/runner"
 	"io/ioutil"
 	"os"

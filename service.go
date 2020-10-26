@@ -2,7 +2,7 @@ package designer
 
 import (
 	"github.com/hashicorp/go-multierror"
-	"github.com/khorevaa/go-v8platform/errors"
+	"github.com/v8platform/errors"
 	"github.com/v8platform/marshaler"
 )
 

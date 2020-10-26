@@ -2,7 +2,7 @@ package designer
 
 import (
 	"context"
-	sshclient "github.com/khorevaa/go-v8platform/agent/client"
+	sshclient "github.com/v8platform/agent"
 	"github.com/v8platform/designer/tests"
 	"github.com/v8platform/runner"
 
