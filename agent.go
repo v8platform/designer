@@ -2,7 +2,7 @@ package designer
 
 import (
 	"context"
-	"github.com/khorevaa/go-v8platform/errors"
+	"github.com/v8platform/errors"
 	"github.com/v8platform/marshaler"
 	"net"
 	"strconv"
