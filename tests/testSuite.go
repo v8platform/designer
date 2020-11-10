@@ -1,9 +1,9 @@
 package tests
 
 import (
-	"github.com/khorevaa/go-v8platform/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
+	"github.com/v8platform/errors"
 	"github.com/v8platform/runner"
 	"io/ioutil"
 	"os"

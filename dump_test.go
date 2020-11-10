@@ -1,8 +1,8 @@
 package designer
 
 import (
-	"github.com/khorevaa/go-v8platform/errors"
 	"github.com/v8platform/designer/tests"
+	"github.com/v8platform/errors"
 	"github.com/v8platform/runner"
 
 	"io/ioutil"
