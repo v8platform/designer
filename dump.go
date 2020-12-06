@@ -76,11 +76,10 @@ func (o DumpConfigToFilesOptions) WithExtension(extension string) DumpConfigToFi
 
 }
 
-func (o DumpConfigToFilesOptions) WithUpdate(force bool, configDumpInfo string) DumpConfigToFilesOptions {
+func (o DumpConfigToFilesOptions) WithUpdate(configDumpInfo string) DumpConfigToFilesOptions {
 
 	newO := o
 
-	newO.Force = force
 	newO.Update = true
 	newO.ConfigDumpInfoForChanges = configDumpInfo
 
