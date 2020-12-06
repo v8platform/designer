@@ -78,13 +78,13 @@ type LoadConfigFromFiles struct {
 	//соответствующий загруженной конфигурации.
 	//Если выполняется частичная загрузка (используется параметр -files или -listFile),
 	//файл версий будет обновлен.
-	UpdateDumpInfo bool `v8:"-updateConfigDumpInfo" json:"update_config_dump_info"`
+	UpdateDumpInfo bool `v8:"-updateConfigDumpInfo, optional" json:"update_config_dump_info"`
 
 	//files — содержит список файлов, которые требуется загрузить.
 	//Список разделяется запятыми.
 	//Не используется, если указан параметр -listFile.
 	//При запуске в режиме агента путь к загружаемым файлам должен быть относительным.
-	Files FileList `v8:"-files" json:"files"`
+	Files FileList `v8:"-files, optional" json:"files"`
 
 	//listFile — указывает файл, в котором перечислены файлы, которые требуется загрузить. Не используется, если указан параметр -files. При запуске в режиме агента путь к загружаемым файлам должен быть относительным.
 	//Указываемый файл должен удовлетворять следующим требованиям:
