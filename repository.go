@@ -1,8 +1,7 @@
-package repository
+package designer
 
 import (
 	"github.com/hashicorp/go-multierror"
-	"github.com/v8platform/designer"
 	"github.com/v8platform/errors"
 	"github.com/v8platform/marshaler"
 )
@@ -38,16 +37,21 @@ type Repository struct {
 
 	///ConfigurationRepositoryN <имя>
 	//— указание имени пользователя хранилища.
-	User string `v8:"/ConfigurationRepositoryN, default=Администратор" json:"user"`
+	User string `v8:"/ConfigurationRepositoryN, default=Администратор, optional" json:"user"`
 
 	///ConfigurationRepositoryP <пароль>
 	//— указание пароля пользователя хранилища.
 	Password string `v8:"/ConfigurationRepositoryP, optional" json:"password"`
+
+	//-Extension <имя расширения> — Имя расширения.
+	// Если параметр указан, выполняется попытка соединения с
+	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
+	Extension string `v8:"-Extension, optional" json:"extension"`
 }
 
-func (ib Repository) Values() []string {
+func (r Repository) Values() []string {
 
-	v, _ := marshaler.Marshal(ib)
+	v, _ := marshaler.Marshal(r)
 	return v
 
 }
@@ -62,17 +66,10 @@ func (ib Repository) Values() []string {
 // /ConfigurationRepositoryP "123456" /ConfigurationRepositoryCreate - AllowConfigurationChanges
 // -ChangesAllowedRule ObjectNotEditable -ChangesNotRecommendedRule ObjectNotEditable
 type RepositoryCreateOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	command struct{} `v8:"/ConfigurationRepositoryCreate" json:"-"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//-AllowConfigurationChanges — если конфигурация находится на поддержке без возможности изменения, будет включена возможность изменения.
 	AllowConfigurationChanges bool `v8:"-AllowConfigurationChanges, optional" json:"allow_configuration_changes"`
@@ -95,20 +92,23 @@ type RepositoryCreateOptions struct {
 	NoBind bool `v8:"-NoBind, optional" json:"no_bind"`
 }
 
-func (o RepositoryCreateOptions) WithAuth(user, pass string) RepositoryCreateOptions {
+func (r Repository) Create(noBind bool, allowedAndNotRecommendedRules ...RepositorySupportEditObjectsType) RepositoryCreateOptions {
 
-	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
+	command := RepositoryCreateOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+		NoBind:     noBind,
+	}
 
-}
+	if len(allowedAndNotRecommendedRules) > 0 {
+		command.AllowConfigurationChanges = true
+		command.ChangesAllowedRule = allowedAndNotRecommendedRules[0]
+		if len(allowedAndNotRecommendedRules) == 2 {
+			command.ChangesNotRecommendedRule = allowedAndNotRecommendedRules[1]
+		}
+	}
 
-func (o RepositoryCreateOptions) WithPath(path string) RepositoryCreateOptions {
-
-	newO := o
-	newO.Path = path
-	return newO
+	return command
 
 }
 

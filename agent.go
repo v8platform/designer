@@ -9,9 +9,8 @@ import (
 	"time"
 )
 
-///AgentMode
-//Включает режим агента конфигуратора.
-//При наличии этой команды игнорируются команды /DisableStartupMessages /DisableStartupDialogs, если таковые указаны.
+// AgentModeOptions Включает режим агента конфигуратора.
+//	При наличии этой команды игнорируются команды /DisableStartupMessages /DisableStartupDialogs, если таковые указаны.
 //
 type AgentModeOptions struct {
 	command struct{} `v8:"/AgentMode" json:"-"`
@@ -20,9 +19,9 @@ type AgentModeOptions struct {
 	//Данная команда позволяет указать рабочий каталог,
 	//который используется при работе SFTP-сервера, а также при работе команд загрузки/выгрузки конфигурации.
 	//Если команда не указана, то будет использован следующий каталог:
-	//● Для ОС Windows: %LOCALAPPDATA%\1C\1cv8\<Уникальный идентификатор информационной базы>\sftp.
-	//● Для ОС Linux: ~/.1cv8/1C/1cv8/<Уникальный идентификатор информационной базы>/sftp.
-	//● Для ОС macOS: ~/.1cv8/1C/1cv8/<Уникальный идентификатор информационной базы>/sftp.
+	//	Для ОС Windows: %LOCALAPPDATA%\1C\1cv8\<Уникальный идентификатор информационной базы>\sftp.
+	//	Для ОС Linux: ~/.1cv8/1C/1cv8/<Уникальный идентификатор информационной базы>/sftp.
+	//	Для ОС macOS: ~/.1cv8/1C/1cv8/<Уникальный идентификатор информационной базы>/sftp.
 	BaseDir string `v8:"/AgentBaseDir, optional" json:"dir"`
 
 	///AgentPort <Порт>
@@ -35,12 +34,11 @@ type AgentModeOptions struct {
 	//Если команда не указан, то по умолчанию используется IP-адрес 127.0.0.1.
 	ListenAddress string `v8:"/AgentListenAddress, optional" json:"ip"`
 
-	///AgentSSHHostKeyAuto
-	//Команда указывает, что закрытый ключ хоста имеет следующее расположение (в зависимости от используемой операционной системы):
-	//● Для ОС Windows: %LOCALAPPDATA%\1C\1cv8\host_id.
-	//● Для ОС Linux: ~/.1cv8/1C/1cv8/host_id.
-	//● Для ОС macOS: ~/.1cv8/1C/1cv8/host_id.
-	//Если указанный файл не будет обнаружен, то будет создан закрытый ключ для алгоритма RSA с длиной ключа 2 048 бит.
+	// SSHHostKeyAuto Команда указывает, что закрытый ключ хоста имеет следующее расположение (в зависимости от используемой операционной системы):
+	//	Для ОС Windows: %LOCALAPPDATA%\1C\1cv8\host_id.
+	//	Для ОС Linux: ~/.1cv8/1C/1cv8/host_id.
+	//	Для ОС macOS: ~/.1cv8/1C/1cv8/host_id.
+	//	Если указанный файл не будет обнаружен, то будет создан закрытый ключ для алгоритма RSA с длиной ключа 2 048 бит.
 	SSHHostKeyAuto bool `v8:"/AgentSSHHostKeyAuto, optional" json:"ssh-auto"`
 
 	///AgentSSHHostKey <приватный ключ>

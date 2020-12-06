@@ -1,13 +1,11 @@
-package repository
+package designer
 
 import (
 	"github.com/stretchr/testify/suite"
-	"github.com/v8platform/designer"
 	"github.com/v8platform/designer/tests"
 	"github.com/v8platform/errors"
 	"github.com/v8platform/runner"
 	"io/ioutil"
-	"os"
 	"path"
 	"testing"
 )
@@ -34,8 +32,8 @@ func (t *RepositoryCfgTestSuite) BeforeTest(suite, testName string) {
 func (t *RepositoryCfgTestSuite) createTestRepository() {
 	confFile := path.Join(t.Pwd, "..", "..", "tests", "fixtures", "0.9", "1Cv8.cf")
 
-	err := runner.Run(tests.NewFileIB(t.TempIB), designer.LoadCfgOptions{
-		Designer: designer.NewDesigner(),
+	err := runner.Run(tests.NewFileIB(t.TempIB), LoadCfgOptions{
+		Designer: NewDesigner(),
 		File:     confFile},
 		runner.WithTimeout(30))
 
@@ -133,12 +131,4 @@ func (t *RepositoryCfgTestSuite) TestRepositoryUpdateCfg() {
 
 	t.R().NoError(err, errors.GetErrorContext(err))
 
-}
-
-func Exists(name string) (bool, error) {
-	_, err := os.Stat(name)
-	if os.IsNotExist(err) {
-		return false, err
-	}
-	return true, nil
 }

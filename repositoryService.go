@@ -1,7 +1,6 @@
-package repository
+package designer
 
 import (
-	"github.com/v8platform/designer"
 	"github.com/v8platform/marshaler"
 )
 
@@ -32,17 +31,10 @@ const (
 //для присоединенной к хранилищу конфигурации, информация для отчетов берется из текущего хранилища:
 //DESIGNER /F"D:\V8\Cfgs82\ИБ82" /ConfigurationRepositoryReport "D:\ByComment.mxl" -NBegin 1 -NEnd 2 -GroupByComment
 type RepositoryReportOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	File string `v8:"/ConfigurationRepositoryReport" json:"file"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//NBegin — номер сохраненной версии, от которой начинается строиться отчет;
 	NBegin int64 `v8:"-NBegin, optional" json:"number_begin"`
@@ -78,23 +70,6 @@ func (o RepositoryReportOptions) GroupByComment() RepositoryReportOptions {
 
 }
 
-func (o RepositoryReportOptions) WithAuth(user, pass string) RepositoryReportOptions {
-
-	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
-
-}
-
-func (o RepositoryReportOptions) WithPath(path string) RepositoryReportOptions {
-
-	newO := o
-	newO.Path = path
-	return newO
-
-}
-
 func (o RepositoryReportOptions) WithRepository(repository Repository) RepositoryReportOptions {
 
 	newO := o
@@ -102,5 +77,24 @@ func (o RepositoryReportOptions) WithRepository(repository Repository) Repositor
 	newO.User = repository.User
 	newO.Password = repository.Password
 	return newO
+
+}
+
+func (r Repository) Report(file string, startAndEndVersions ...int64) RepositoryReportOptions {
+
+	command := RepositoryReportOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+		File:       file,
+	}
+
+	if len(startAndEndVersions) > 0 {
+		command.NBegin = startAndEndVersions[0]
+		if len(startAndEndVersions) > 2 {
+			command.NEnd = startAndEndVersions[1]
+		}
+	}
+
+	return command
 
 }

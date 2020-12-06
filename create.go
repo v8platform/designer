@@ -2,7 +2,6 @@ package designer
 
 import (
 	"github.com/v8platform/marshaler"
-	"strconv"
 )
 
 type FileDBFormat string
@@ -143,50 +142,14 @@ func NewCreateInfoBase() CreateInfoBaseOptions {
 	return d
 }
 
-func (serverIB CreateServerInfoBaseOptions) CreateString() (string, error) {
-
-	connString := "Srvr=" + serverIB.Srvr +
-		";Ref=" + serverIB.Ref +
-		";DBMS=" + serverIB.DBMS +
-		";DBSrvr=" + serverIB.DBSrvr +
-		";DBUID=" + serverIB.DBUID +
-		";DBPwd=" + serverIB.DBPwd +
-		";DB=" + serverIB.DB +
-		";SQLYOffs=" + strconv.FormatInt(int64(serverIB.SQLYOffs), 10)
-
-	if serverIB.CrSQLDB {
-		connString += ";CrSQLDB=Y"
-	} else {
-		connString += ";CrSQLDB=N"
-	}
-	if serverIB.SchJobDn {
-		connString += ";SchJobDn=Y"
-	} else {
-		connString += ";SchJobDn=N"
-	}
-
-	return connString, nil
-}
-
-func (fileIB CreateFileInfoBaseOptions) CreateString() (string, error) {
-
-	connString := "File=" + fileIB.File
-
-	if fileIB.DBPageSize > 0 {
-		connString += ";DBPageSize=" + strconv.FormatInt(fileIB.DBPageSize, 10)
-	}
-	if len(fileIB.DBFormat) > 0 {
-		connString += ";DBFormat=" + string(fileIB.DBFormat)
-	}
-
-	if len(fileIB.Locale) > 0 {
-		connString += ";Locale=" + fileIB.Locale
-	}
-
-	return connString, nil
-}
-
 func (d CreateFileInfoBaseOptions) Values() []string {
+
+	v, _ := marshaler.Marshal(d)
+	return v
+
+}
+
+func (d CreateServerInfoBaseOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(d)
 	return v

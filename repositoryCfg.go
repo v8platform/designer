@@ -1,7 +1,6 @@
-package repository
+package designer
 
 import (
-	"github.com/v8platform/designer"
 	"github.com/v8platform/marshaler"
 )
 
@@ -17,17 +16,10 @@ import (
 //
 //-forceReplaceCfg — Если конфигурация не пустая, текущая конфигурация будет заменена конфигурацией из хранилища.
 type RepositoryBindCfgOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	command struct{} `v8:"/ConfigurationRepositoryBindCfg" json:"-"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//-Extension <имя расширения> — Имя расширения. Если параметр не указан,
 	// выполняется попытка соединения с хранилищем основной конфигурации, и команда выполняется для основной конфигурации.
@@ -42,6 +34,25 @@ func (ib RepositoryBindCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
+
+}
+
+func (r Repository) Bind(force ...bool) RepositoryBindCfgOptions {
+
+	command := RepositoryBindCfgOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+	}
+
+	if len(force) > 0 {
+		command.ForceReplaceCfg = force[0]
+		command.ForceBindAlreadyBindedUser = force[0]
+		if len(force) > 2 {
+			command.ForceBindAlreadyBindedUser = force[1]
+		}
+	}
+
+	return command
 
 }
 
@@ -61,17 +72,10 @@ func (ib RepositoryBindCfgOptions) Values() []string {
 //(пропуск диалога аутентификации, если не указаны параметры пользователя хранилища, игнорирование наличия захваченных и измененных объектов).
 //
 type RepositoryUnbindCfgOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	command struct{} `v8:"/ConfigurationRepositoryUnbindCfg" json:"-"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//-force — параметр для форсирования отключения от хранилища
 	//(пропуск диалога аутентификации, если не указаны параметры пользователя хранилища, игнорирование наличия захваченных и измененных объектов).
@@ -85,6 +89,21 @@ func (ib RepositoryUnbindCfgOptions) Values() []string {
 
 }
 
+func (r Repository) Unbind(force ...bool) RepositoryUnbindCfgOptions {
+
+	command := RepositoryUnbindCfgOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+	}
+
+	if len(force) > 0 {
+		command.Force = force[0]
+	}
+
+	return command
+
+}
+
 ///ConfigurationRepositoryDumpCfg [-Extension <имя расширения>] <имя cf файла> [-v <номер версии хранилища>]
 //— сохранить конфигурацию из хранилища в файл (пакетный режим запуска). Доступны параметры:
 //
@@ -95,17 +114,10 @@ func (ib RepositoryUnbindCfgOptions) Values() []string {
 //-v <номер версии хранилища> v — Номер версии, если номер версии не указан,
 // или равен -1, будет сохранена последняя версия.
 type RepositoryDumpCfgOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	File string `v8:"/ConfigurationRepositoryDumpCfg" json:"file"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//-v <номер версии хранилища> v — Номер версии, если номер версии не указан,
 	// или равен -1, будет сохранена последняя версия.
@@ -116,6 +128,22 @@ func (ib RepositoryDumpCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
 	return v
+
+}
+
+func (r Repository) DumpCfg(file string, version ...int64) RepositoryDumpCfgOptions {
+
+	command := RepositoryDumpCfgOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+		File:       file,
+	}
+
+	if len(version) > 0 {
+		command.Version = version[0]
+	}
+
+	return command
 
 }
 
@@ -146,17 +174,10 @@ func (ib RepositoryDumpCfgOptions) Values() []string {
 //Если параметр используется, будет выполнена попытка обновления только объектов, указанных в файле.
 //Если параметр не используется, обновляется вся конфигурация целиком.
 type RepositoryUpdateCfgOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	command struct{} `v8:"/ConfigurationRepositoryUpdateCfg" json:"-"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//-v <номер версии хранилища> — номер версии в хранилище конфигурации.
 	//Если конфигурация подключена к хранилищу, то номер версии (если он указан) игнорируется
@@ -179,8 +200,6 @@ type RepositoryUpdateCfgOptions struct {
 	//Если параметр используется, будет выполнена попытка обновления только объектов, указанных в файле.
 	//Если параметр не используется, обновляется вся конфигурация целиком.
 	Objects string `v8:"-objects, optional" json:"objects"`
-
-	UpdateDBCfg *designer.UpdateDBCfgOptions `v8:",inherit" json:"update_db_cfg"`
 }
 
 func (ib RepositoryUpdateCfgOptions) Values() []string {
@@ -190,19 +209,10 @@ func (ib RepositoryUpdateCfgOptions) Values() []string {
 
 }
 
-func (o RepositoryUpdateCfgOptions) WithAuth(user, pass string) RepositoryUpdateCfgOptions {
+func (o RepositoryUpdateCfgOptions) WithObjects(objectsFile string) RepositoryUpdateCfgOptions {
 
 	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
-
-}
-
-func (o RepositoryUpdateCfgOptions) WithPath(path string) RepositoryUpdateCfgOptions {
-
-	newO := o
-	newO.Path = path
+	newO.Objects = objectsFile
 	return newO
 
 }
@@ -217,20 +227,19 @@ func (o RepositoryUpdateCfgOptions) WithRepository(repository Repository) Reposi
 
 }
 
-func (o RepositoryDumpCfgOptions) WithAuth(user, pass string) RepositoryDumpCfgOptions {
+func (r Repository) UpdateCfg(version int64, force ...bool) RepositoryUpdateCfgOptions {
 
-	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
+	command := RepositoryUpdateCfgOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+		Version:    version,
+	}
 
-}
+	if len(force) > 0 {
+		command.Force = force[0]
+	}
 
-func (o RepositoryDumpCfgOptions) WithPath(path string) RepositoryDumpCfgOptions {
-
-	newO := o
-	newO.Path = path
-	return newO
+	return command
 
 }
 
@@ -244,46 +253,12 @@ func (o RepositoryDumpCfgOptions) WithRepository(repository Repository) Reposito
 
 }
 
-func (o RepositoryBindCfgOptions) WithAuth(user, pass string) RepositoryBindCfgOptions {
-
-	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
-
-}
-
-func (o RepositoryBindCfgOptions) WithPath(path string) RepositoryBindCfgOptions {
-
-	newO := o
-	newO.Path = path
-	return newO
-
-}
-
 func (o RepositoryBindCfgOptions) WithRepository(repository Repository) RepositoryBindCfgOptions {
 
 	newO := o
 	newO.Path = repository.Path
 	newO.User = repository.User
 	newO.Password = repository.Password
-	return newO
-
-}
-
-func (o RepositoryUnbindCfgOptions) WithAuth(user, pass string) RepositoryUnbindCfgOptions {
-
-	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
-
-}
-
-func (o RepositoryUnbindCfgOptions) WithPath(path string) RepositoryUnbindCfgOptions {
-
-	newO := o
-	newO.Path = path
 	return newO
 
 }

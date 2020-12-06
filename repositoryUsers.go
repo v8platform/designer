@@ -1,7 +1,6 @@
-package repository
+package designer
 
 import (
-	"github.com/v8platform/designer"
 	"github.com/v8platform/marshaler"
 )
 
@@ -11,17 +10,10 @@ import (
 // должен обладать административными правами.
 // Если пользователь с указанным именем существует, то пользователь добавлен не будет.
 type RepositoryAddUserOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	command struct{} `v8:"/ConfigurationRepositoryAddUser" json:"-"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//-User — Имя создаваемого пользователя.
 	NewUser string `v8:"-User" json:"user"`
@@ -41,27 +33,10 @@ type RepositoryAddUserOptions struct {
 	RestoreDeletedUser bool `v8:"-RestoreDeletedUser, optional" json:"restore_deleted_user"`
 }
 
-func (ib RepositoryAddUserOptions) Values() []string {
+func (o RepositoryAddUserOptions) Values() []string {
 
-	v, _ := marshaler.Marshal(ib)
+	v, _ := marshaler.Marshal(o)
 	return v
-
-}
-
-func (o RepositoryAddUserOptions) WithAuth(user, pass string) RepositoryAddUserOptions {
-
-	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
-
-}
-
-func (o RepositoryAddUserOptions) WithPath(path string) RepositoryAddUserOptions {
-
-	newO := o
-	newO.Path = path
-	return newO
 
 }
 
@@ -75,21 +50,32 @@ func (o RepositoryAddUserOptions) WithRepository(repository Repository) Reposito
 
 }
 
+func (r Repository) AddUser(user, password string, rights RepositoryRightType, restoreDeletedUser ...bool) RepositoryAddUserOptions {
+
+	command := RepositoryAddUserOptions{
+		Designer:    NewDesigner(),
+		Repository:  r,
+		NewUser:     user,
+		NewPassword: password,
+		Rights:      rights,
+	}
+
+	if len(restoreDeletedUser) > 0 {
+		command.RestoreDeletedUser = restoreDeletedUser[0]
+	}
+
+	return command
+
+}
+
 ///ConfigurationRepositoryCopyUsers  -Path <путь> -User <Имя>
 //-Pwd <Пароль> [-RestoreDeletedUser][-Extension <имя расширения>]
 //— копирование пользователей из хранилища конфигурации. Копирование удаленных пользователей не выполняется. Если пользователь с указанным именем существует, то пользователь не будет добавлен.
 type RepositoryCopyUsersOptions struct {
-	designer.Designer `v8:",inherit" json:"designer"`
-	Repository        `v8:",inherit" json:"repository"`
+	Designer   `v8:",inherit" json:"designer"`
+	Repository `v8:",inherit" json:"repository"`
 
 	command struct{} `v8:"/ConfigurationRepositoryCopyUsers" json:"-"`
-
-	//-Extension <имя расширения> — Имя расширения.
-	// Если параметр не указан, выполняется попытка соединения с хранилищем основной конфигурации,
-	// и команда выполняется для основной конфигурации.
-	// Если параметр указан, выполняется попытка соединения с
-	// хранилищем указанного расширения, и команда выполняется для этого хранилища.
-	Extension string `v8:"-Extension, optional" json:"extension"`
 
 	//-Path — Путь к хранилищу, из которого выполняется копирование пользователей.
 	RemotePath string `v8:"-Path" json:"remote_path"`
@@ -111,23 +97,6 @@ func (ib RepositoryCopyUsersOptions) Values() []string {
 
 }
 
-func (o RepositoryCopyUsersOptions) WithAuth(user, pass string) RepositoryCopyUsersOptions {
-
-	newO := o
-	newO.User = user
-	newO.Password = pass
-	return newO
-
-}
-
-func (o RepositoryCopyUsersOptions) WithPath(path string) RepositoryCopyUsersOptions {
-
-	newO := o
-	newO.Path = path
-	return newO
-
-}
-
 func (o RepositoryCopyUsersOptions) WithRepository(repository Repository) RepositoryCopyUsersOptions {
 
 	newO := o
@@ -145,5 +114,41 @@ func (o RepositoryCopyUsersOptions) FromRepository(repository Repository) Reposi
 	newO.RemoteUser = repository.User
 	newO.RemotePwd = repository.Password
 	return newO
+
+}
+
+func (r Repository) CopyUsers(path, user, password string, restoreDeletedUser ...bool) RepositoryCopyUsersOptions {
+
+	command := RepositoryCopyUsersOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+		RemoteUser: user,
+		RemotePwd:  password,
+		RemotePath: path,
+	}
+
+	if len(restoreDeletedUser) > 0 {
+		command.RestoreDeletedUser = restoreDeletedUser[0]
+	}
+
+	return command
+
+}
+
+func (r Repository) CopyUsersFromRepository(repository Repository, restoreDeletedUser ...bool) RepositoryCopyUsersOptions {
+
+	command := RepositoryCopyUsersOptions{
+		Designer:   NewDesigner(),
+		Repository: r,
+		RemoteUser: repository.User,
+		RemotePwd:  repository.Password,
+		RemotePath: repository.Path,
+	}
+
+	if len(restoreDeletedUser) > 0 {
+		command.RestoreDeletedUser = restoreDeletedUser[0]
+	}
+
+	return command
 
 }
