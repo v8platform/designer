@@ -67,27 +67,43 @@ type UpdateCfgOptions struct {
 	UpdateDBCfg *UpdateDBCfgOptions `v8:",inherit" json:"update_db"`
 }
 
-func (d UpdateCfgOptions) Values() []string {
+func (o UpdateCfgOptions) Values() []string {
 
-	v, _ := marshaler.Marshal(d)
+	v, _ := marshaler.Marshal(o)
 	return v
 
 }
 
-func (d UpdateCfgOptions) WithUpdateDBCfg(upd UpdateDBCfgOptions) UpdateCfgOptions {
+func (o UpdateCfgOptions) WithUpdateDBCfg(upd UpdateDBCfgOptions) UpdateCfgOptions {
 
 	UpdateDBCfg := &upd
+	newO := o
+	newO.UpdateDBCfg = UpdateDBCfg
+	return newO
 
-	return UpdateCfgOptions{
-		Designer:                         d.Designer,
-		File:                             d.File,
-		Settings:                         d.Settings,
-		IncludeObjectsByUnresolvedRefs:   d.IncludeObjectsByUnresolvedRefs,
-		ClearUnresolvedRefs:              d.ClearUnresolvedRefs,
-		Force:                            d.Force,
-		DumpListOfTwiceChangedProperties: d.DumpListOfTwiceChangedProperties,
-		UpdateDBCfg:                      UpdateDBCfg,
-	}
+}
+
+func (o UpdateCfgOptions) WithSettings(file string) UpdateCfgOptions {
+
+	newO := o
+	newO.Settings = file
+	return newO
+
+}
+
+func (o UpdateCfgOptions) WithIncludeObjectsByUnresolvedRefs() UpdateCfgOptions {
+
+	newO := o
+	newO.IncludeObjectsByUnresolvedRefs = true
+	return newO
+
+}
+
+func (o UpdateCfgOptions) WithClearUnresolvedRefs() UpdateCfgOptions {
+
+	newO := o
+	newO.ClearUnresolvedRefs = true
+	return newO
 
 }
 
