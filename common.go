@@ -8,7 +8,7 @@ var _ command = (*Designer)(nil)
 
 type Designer struct {
 	DisableStartupDialogs  bool `v8:"/DisableStartupDialogs" json:"disable_startup_dialogs"`
-	DisableStartupMessages bool `v8:"/DisableStartupDialogs" json:"disable_startup_messages"`
+	DisableStartupMessages bool `v8:"/DisableStartupMessages" json:"disable_startup_messages"`
 	Visible                bool `v8:"/Visible" json:"visible"`
 }
 
