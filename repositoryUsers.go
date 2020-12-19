@@ -36,6 +36,7 @@ type RepositoryAddUserOptions struct {
 func (o RepositoryAddUserOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(o)
+	fixExtensionIndex(&v)
 	return v
 
 }
@@ -93,6 +94,7 @@ type RepositoryCopyUsersOptions struct {
 func (ib RepositoryCopyUsersOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }

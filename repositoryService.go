@@ -50,6 +50,7 @@ type RepositoryReportOptions struct {
 func (ib RepositoryReportOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }

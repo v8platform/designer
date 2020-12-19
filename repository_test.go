@@ -452,3 +452,55 @@ func TestRepository_Values(t *testing.T) {
 		})
 	}
 }
+
+func TestRepository_ValuesFixExtension(t *testing.T) {
+	type fields interface {
+		Values() []string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []string
+	}{
+		{
+			"simple",
+			Repository{
+				Path:      "./repo",
+				User:      "admin",
+				Password:  "pwd",
+				Extension: "",
+			},
+			[]string{
+				"/ConfigurationRepositoryF ./repo",
+				"/ConfigurationRepositoryN admin",
+				"/ConfigurationRepositoryP pwd",
+			},
+		},
+		{
+			"ext",
+			Repository{
+				Path:      "./repo",
+				User:      "admin",
+				Password:  "pwd",
+				Extension: "test",
+			}.Report("./file"),
+			[]string{
+				"/DisableStartupDialogs",
+				"/DisableStartupMessages",
+				"/ConfigurationRepositoryF ./repo",
+				"/ConfigurationRepositoryN admin",
+				"/ConfigurationRepositoryP pwd",
+				"/ConfigurationRepositoryReport ./file",
+				"-Extension test",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			if got := tt.fields.Values(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Values() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

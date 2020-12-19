@@ -16,6 +16,7 @@ type RepositoryClearGlobalCacheOptions struct {
 func (ib RepositoryClearGlobalCacheOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }
@@ -42,6 +43,7 @@ type RepositoryClearCacheOptions struct {
 func (ib RepositoryClearCacheOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }
@@ -68,6 +70,7 @@ type RepositoryClearLocalCacheOptions struct {
 func (ib RepositoryClearLocalCacheOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }

@@ -33,6 +33,7 @@ type RepositoryBindCfgOptions struct {
 func (ib RepositoryBindCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }
@@ -85,6 +86,7 @@ type RepositoryUnbindCfgOptions struct {
 func (ib RepositoryUnbindCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }
@@ -127,6 +129,7 @@ type RepositoryDumpCfgOptions struct {
 func (ib RepositoryDumpCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }
@@ -205,6 +208,7 @@ type RepositoryUpdateCfgOptions struct {
 func (ib RepositoryUpdateCfgOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }

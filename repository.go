@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/v8platform/errors"
 	"github.com/v8platform/marshaler"
+	"strings"
 )
 
 type RepositoryRightType string
@@ -125,6 +126,7 @@ func (o RepositoryCreateOptions) WithRepository(repository Repository) Repositor
 func (ib RepositoryCreateOptions) Values() []string {
 
 	v, _ := marshaler.Marshal(ib)
+	fixExtensionIndex(&v)
 	return v
 
 }
@@ -141,5 +143,27 @@ func (ib RepositoryCreateOptions) Check() error {
 	}
 
 	return err.ErrorOrNil()
+
+}
+
+func fixExtensionIndex(values *[]string) {
+
+	val := *values
+	extIdx := -1
+	for i := 0; i < len(val); i++ {
+		if strings.Contains(val[i], "-Extension") {
+			extIdx = i
+			break
+		}
+	}
+
+	if extIdx != -1 {
+		ext := val[extIdx]
+
+		val = append(val[:extIdx], val[extIdx+1:]...)
+		val = append(val, ext)
+
+		values = &val
+	}
 
 }
