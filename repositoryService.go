@@ -91,7 +91,7 @@ func (r Repository) Report(file string, startAndEndVersions ...int64) Repository
 
 	if len(startAndEndVersions) > 0 {
 		command.NBegin = startAndEndVersions[0]
-		if len(startAndEndVersions) > 2 {
+		if len(startAndEndVersions) == 2 {
 			command.NEnd = startAndEndVersions[1]
 		}
 	}
